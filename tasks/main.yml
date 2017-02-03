@@ -1,0 +1,18 @@
+---
+# tasks file for masscan
+
+- name: masscan prerequisites
+  apt: state=latest name={{ item }}
+  with_items:
+  - git
+  - build-essential
+  - libpcap-dev
+
+- name: download masscan code
+  git: repo=https://github.com/robertdavidgraham/masscan.git dest=/tmp/masscan
+
+- name: make masscan
+  shell: chdir=/tmp/masscan "make"
+
+- name: copying masscan to path directory
+  copy: src=/tmp/masscan/bin/masscan dest=/usr/local/sbin/ force=yes remote_src=True mode=0755
